@@ -1,7 +1,9 @@
 FROM ubuntu:14.04
 MAINTAINER nrshrivatsan@outlook.com
 
-RUN apt-get update && apt-get -y install software-properties-common
+RUN apt-get update \
+      && apt-get -y install software-properties-common
+
 RUN add-apt-repository ppa:openjdk-r/ppa -y
 RUN apt-get update && apt-get -y install \
       bison \
@@ -21,25 +23,18 @@ RUN apt-get update && apt-get -y install \
 RUN update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
 
 # Docker
-RUN wget -qO- https://get.docker.com/ | sh
+#RUN wget -qO- https://get.docker.com/ | sh
 
 # Aurora
 RUN git clone git://git.apache.org/aurora.git /aurora
-ENV MESOS_VERSION 0.23.0
+ENV MESOS_VERSION 0.25.0
 RUN mkdir -p /aurora/third_party
-ADD https://svn.apache.org/repos/asf/aurora/3rdparty/ubuntu/trusty64/python/mesos.native-${MESOS_VERSION}-py2.7-linux-x86_64.egg /aurora/third_party/
+ADD https://svn.apache.org/repos/asf/aurora/3rdparty/ubuntu/trusty64/python/mesos.native-0.25.0-py2.7-linux-x86_64.egg /aurora/third_party/
 
 ADD http://people.apache.org/~jfarrell/thrift/0.9.1/contrib/deb/ubuntu/12.04/thrift-compiler_0.9.1_amd64.deb /
-ADD http://downloads.mesosphere.io/master/ubuntu/12.04/mesos_${MESOS_VERSION}-1.0.ubuntu1204_amd64.deb /
+ADD http://downloads.mesosphere.io/master/ubuntu/14.04/mesos_0.25.0-0.2.70.ubuntu1404_amd64.deb /
 RUN dpkg --install thrift-compiler_0.9.1_amd64.deb
-RUN dpkg --install mesos_${MESOS_VERSION}-1.0.ubuntu1204_amd64.deb
-
-# Docker-in-Docker
-ADD https://raw.githubusercontent.com/jpetazzo/dind/master/wrapdocker /usr/local/bin/
-RUN chmod +x /usr/local/bin/wrapdocker && chown root:root /usr/local/bin/wrapdocker
-RUN sed -i 's/exec bash/#exec bash/' /usr/local/bin/wrapdocker
-RUN printf '#!/bin/bash\nexit 0\n' > /sbin/apparmor_parser && \
-    chmod +x /sbin/apparmor_parser
+RUN dpkg --install mesos_0.25.0-0.2.70.ubuntu1404_amd64.deb
 
 # sshd
 RUN mkdir -p /var/run/sshd
@@ -57,4 +52,5 @@ RUN chmod +x /usr/local/bin/init.sh
 
 CMD ["/usr/local/bin/init.sh"]
 
-    Status API Training Shop Blog About Pricing
+#docker build -t cmaz .
+#docker run -it -p 8081:8081 -p 5050:5050 -p 2181:2181 -p 2888:2888 -p 3888:3888 cmaz
