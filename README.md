@@ -3,6 +3,8 @@
 
 #tl;dr
 
+`docker run -p 2181:2181 -p 5050:5050 -p 8081:8081 nrshrivatsan/cmaz`
+
 ![Standalone Mesos Aurora Zookeeper](https://cloud.githubusercontent.com/assets/5283109/11858705/a619cb26-a418-11e5-81e6-a46400275b53.png)
 
 #why
